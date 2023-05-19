@@ -1,0 +1,8 @@
+Running the Bot. 
+
+Duplicate .env.template 
+Fill in your Discord API and OpenAI API tokens.
+
+pip install -r requirements.txt
+
+python main.py
