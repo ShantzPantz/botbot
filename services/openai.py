@@ -4,6 +4,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 from config import Config
+from aiohttp import ClientSession
 
 openai.api_key = Config().OPENAI_TOKEN
 
@@ -69,22 +70,45 @@ class OpenAIService:
         return result['data'][0]['url']
     
     
-    def chat_gpt(self, gpt_messages):
-        response = openai.ChatCompletion.create(
+    async def chat_gpt(self, gpt_messages, max_tokens=2000):
+        openai.aiosession.set(ClientSession())
+        response = await openai.ChatCompletion.acreate(
             model="gpt-3.5-turbo",
             messages=gpt_messages,
-            max_tokens=1500
+            max_tokens=max_tokens
         )
+        await openai.aiosession.get().close()
 
         return response.choices[0].message.content.strip()
 
     
-    def summarize_chat(self, text, style="a friendly note taker"):
+    def summarize_chat(self, text, style="a conversational analyst"):
         prompt = "Summarize the following conversation: "
 
         gpt_messages = [
             {"role": "system", "content": f"You are a conversation summarizer who answers in the style of {style}"},
             {"role": "user", "content": f"{prompt}\n\n \"{text}\"\n\n - in the style of {style}" }
+        ]
+
+        return self.chat_gpt(gpt_messages)
+    
+    
+    def summarize_chat_review(self, text):
+        prompt = "Summarize the following conversation: "
+
+        gpt_messages = [
+            {"role": "system", "content": f"You are a conversation summarizer who will create a report for a chat log. The log should include Key topics discussed an overall summary of what was talked about and the mood of the conversation."},
+            {"role": "user", "content": f"{prompt}\n\n \"{text}\"" }
+        ]
+
+        return self.chat_gpt(gpt_messages)
+    
+    def executive_summary(self, text):
+        prompt = "Create a rap in the style of Eminem about this group chat using the following as context: "
+
+        gpt_messages = [
+            {"role": "system", "content": f"You are a conversation summarizer will create an executive summary of daily chatlog summaries."},
+            {"role": "user", "content": f"{prompt}\n\n \"{text}\"" }
         ]
 
         return self.chat_gpt(gpt_messages)

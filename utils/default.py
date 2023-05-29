@@ -1,3 +1,5 @@
+import datetime
+import random
 import discord
 import os
 
@@ -29,6 +31,12 @@ class DiscordBot(commands.Bot):
     async def process_commands(self, msg):
         ctx = await self.get_context(msg, cls=CustomContext)
         await self.invoke(ctx)
+
+    def random_date(self, start, end):
+        delta = end - start
+        int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
+        random_second = random.randrange(int_delta)
+        return start + datetime.timedelta(seconds=random_second)
 
 
 class CustomContext(commands.Context):

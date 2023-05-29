@@ -1,5 +1,4 @@
 import re
-import traceback
 import discord
 from discord.ext import commands
 from discord import app_commands
@@ -8,7 +7,7 @@ from discord.ext.commands import has_permissions
 from utils import strings
 from services.openai import OpenAIService
 
-class General(commands.Cog):
+class OpenAIBot(commands.Cog):
     """ A collection of the commands utilizing openAI.
 
             Attributes:
@@ -56,7 +55,6 @@ class General(commands.Cog):
             if message.attachments:
                 modified_url = OpenAIService.getInstance().create_variant(message.attachments[0].url)
                 await channel.send("Variant: " + modified_url)
-
             
             links = re.findall(r'(https?://[^\s]+)', message.clean_content)
             if len(links) > 0:
@@ -71,7 +69,7 @@ class General(commands.Cog):
     
 
 async def setup(bot):   
-    await bot.add_cog(General(bot))    
+    await bot.add_cog(OpenAIBot(bot))    
     
     
     
