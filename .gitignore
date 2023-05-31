@@ -3,3 +3,4 @@ __pycache__/
 .vscode
 .venv
 .__pycache__
+twitter_auth.pickle

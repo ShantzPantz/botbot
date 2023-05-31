@@ -70,16 +70,19 @@ class OpenAIService:
         return result['data'][0]['url']
     
     
-    async def chat_gpt(self, gpt_messages, max_tokens=2000):
+    async def chat_gpt(self, gpt_messages, num=3, max_tokens=2500):
         openai.aiosession.set(ClientSession())
         response = await openai.ChatCompletion.acreate(
             model="gpt-3.5-turbo",
             messages=gpt_messages,
-            max_tokens=max_tokens
+            max_tokens=max_tokens,
+            top_p=0,
+            temperature=1,
+            n=num
         )
         await openai.aiosession.get().close()
 
-        return response.choices[0].message.content.strip()
+        return [choice.message.content.strip() for choice in response.choices]
 
     
     def summarize_chat(self, text, style="a conversational analyst"):

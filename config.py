@@ -19,6 +19,7 @@ class Config:
     TWITTER_AUTO_REPLY = os.getenv('TWITTER_AUTO_REPLY', 'False') == 'True'
     TWITTER_OAUTH_TOKEN = os.getenv('TWITTER_OAUTH_TOKEN', None)
     TWITTER_OAUTH_VERIFIER = os.getenv('TWITTER_OAUTH_VERIFIER', None)
+    TWITTER_REPLY_PROMPT = os.getenv("TWITTER_REPLY_PROMPT", None)
 
     DEBUG = os.getenv('DEBUG', False)
 
